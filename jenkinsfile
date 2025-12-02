@@ -1,0 +1,33 @@
+pipeline{
+    agent any 
+    stages{
+        stage('checkout scm'){
+            steps{
+                echo ' checking out scm. '
+                git branch:'main', url:'https://github.com/vinodkumarthati/exam.git'
+            }
+        }
+        stage('building docker image'){
+            steps{
+                echo 'building docker image'
+                sh' docker build -t vinnu1487/exam:latest .'
+
+            }
+        }
+        stage('running the docker container'){
+            steps{
+                echo 'running the docker image'
+                sh ' docker run -d -p 3000:80 vinnu1487/exam:latest'
+            }
+        }
+    
+    }
+    post{
+        success{
+            echo'succesfully running the file on http://localhost:3000'
+        }
+        failure{
+            echo'pipeline failed'
+        }
+    }
+}
